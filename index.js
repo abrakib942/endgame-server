@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -29,6 +29,18 @@ async function run() {
 
     app.get("/todo", async (req, res) => {
       const result = await todoCollection.find({}).toArray();
+      res.send(result.reverse());
+    });
+
+    app.put("/todo/:id", async (req, res) => {
+      const id = req.params.id;
+      const task = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: task,
+      };
+      const result = await todoCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     });
   } finally {
