@@ -64,6 +64,12 @@ async function run() {
       const result = await todoCollection.deleteOne(filter);
       res.send(result);
     });
+    app.delete("/complete/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await completeCollection.deleteOne(filter);
+      res.send(result);
+    });
   } finally {
     //
   }
